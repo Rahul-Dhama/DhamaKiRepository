@@ -2,17 +2,29 @@ pipeline {
 
 	agent any
 	stages{
-		stage('SCM Checkout'){
-			steps{
-		   git 'https://github.com/Rahul-Dhama/DhamaKiRepository'
+		stage('Compile Stage'){
+		steps{
+				withMaven(maven : 'Maven'){
+					sh 'mvn clean compile'
+				}		
 			}
 		}
-		stage('Compile-Package'){
+			stage('Testing Stage'){
 			steps{
-		   
-			sh 'mvn clean install'
+				withMaven(maven : 'Maven'){
+					sh 'mvn test'
+				}		
+				}
 			}
+			
+			stage('Deployment Stage'){
+			steps{
+				withMaven(maven : 'Maven'){
+					sh 'mvn deploy'
+				}		
+				}
+			}
+			
 		}
-	}		
 	
 }
